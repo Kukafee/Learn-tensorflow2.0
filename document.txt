@@ -50,16 +50,17 @@ def image_grid(images):
         plt.imshow(images[i], cmap=plt.cm.binary)        
     return figure
 —————————————————————————————————————————————————————-
-$ tensorboard --logdir=/home/kukafee/workspace/     # 其中/home/kukafee/workspace/ 为生成可视化日志文件路径
+$ tensorboard --logdir=/home/kukafee/workspace/     # 其中/home/kukafee/workspace/ 为生成可视化日志文件路径，同时也是
+# tensorboard 监听的路径
 ######################################
 current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")    # 获取当前时间并进行格式转化为字符串类型
 log_dir = '/home/kukafee/workspace/TensorBoard/' + current_time
 # 创建writer
-summary_writer = tf.summary.create_file_writer(log_dir)
+summary_writer = tf.summary.create_file_writer(log_dir)  # tf.summary.create_file_writer把监听到的数据写入到参数所指的路径下
 ######################################
 if step % 100 == 0:
     with summary_writer.as_default():
-        tf.summary.scalar('train-loss', float(loss), step=step)
+        tf.summary.scalar('train-loss', float(loss), step=step)  # step参数默认为可视化坐标的横坐标，传入一个全局变量
     with summary_writer.as_default():
         tf.summary.scalar('test-acc', float(total_correct/total_num), step=step)
 ———————————————————————————————————————————————————————
