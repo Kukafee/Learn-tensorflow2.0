@@ -1,0 +1,72 @@
+——------------——impport------------------
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+%matplotlib inline
+import numpy as np
+import sklearn
+import pandas as pd
+import os
+import sys
+import time
+import tensorflow as tf
+import tensorboard as 
+
+from tensorflow import keras
+from tensorflow.keras import datasets
+
+print(tf.__version__)
+print(sys.version_info)
+for module in mpl, np, pd, sklearn, tf, keras:
+    print(module.__name__, module.__version__)    
+    
+_________________________________________________________________________________________________
+def plot_to_image(figure):
+    '''
+    Converts the matplotlib plot specified by 'figure' to a PNG image and returns it. The supplied 
+    figure is closed and inaccessible after this call.
+    '''
+    # Save the plot to a PNG in memory.
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    # Closing the figure prevents it from being displayed directly inside the notebook.
+    plt.close(figure)
+    buf.seek(0)
+    # Convert PNG buffer to TF image
+    image = tf.image.decode_png(buf.getvalue(), channels=4)
+    # Add the batch dimension
+    image = tf.expand_dims(image, 0)    
+    return image
+——————————————————————————————————————————————————————
+def image_grid(images):
+    '''Return a 5*5 grid of the MNIST images as a matplotlib figure'''
+    # Create a figure to contain the plot.
+    figure = plt.figure(figsize=(10, 10))
+    for i in range(25):
+        # start next subplot.
+        plt.subplot(5, 5, i+1, title='name')
+        plt.xticks([])
+        plt.yticks([])
+        plt.grid(False)
+        plt.imshow(images[i], cmap=plt.cm.binary)        
+    return figure
+—————————————————————————————————————————————————————-
+$ tensorboard --logdir=/home/kukafee/workspace/     # 其中/home/kukafee/workspace/ 为生成可视化日志文件路径
+######################################
+current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")    # 获取当前时间并进行格式转化为字符串类型
+log_dir = '/home/kukafee/workspace/TensorBoard/' + current_time
+# 创建writer
+summary_writer = tf.summary.create_file_writer(log_dir)
+######################################
+if step % 100 == 0:
+    with summary_writer.as_default():
+        tf.summary.scalar('train-loss', float(loss), step=step)
+    with summary_writer.as_default():
+        tf.summary.scalar('test-acc', float(total_correct/total_num), step=step)
+———————————————————————————————————————————————————————
+    
+
+
+
+
+
+
